@@ -1,20 +1,21 @@
-// defined variables
+
+// define variables
 var saveBtn = $(".saveBtn");
 
 // current day is displayed at the top of the calendar
-$("#currentDay").text(moment().format('dddd MMMM Do YYYY'));
+$("#currentDay").text(moment().format('LLLL'));
 
 // each time block is color-coded to indicate whether it is in the past, present, or future
 function timeBlockColor() {
-    var currentHour = moment().hours();
+    var hour = moment().hours();
 
-    $(".time-block").each(function () {
-        var divTimId = parseInt($(this).attr("id"));
+    $(".time-block").each(function() {
+        var currentHour = parseInt($(this).attr("id"));
 
 
-        if (divTimId > currentHour) {
+        if (currentHour > hour) {
             $(this).addClass("future");
-        } else if (divTimId === currentHour) {
+        } else if (currentHour === hour) {
             $(this).addClass("present");
         } else {
             $(this).addClass("past");
@@ -22,30 +23,32 @@ function timeBlockColor() {
     })
 };
 
+// saves to local storage
+$(".saveBtn").on("click", function () {
 
-saveBtn.on("click", function () {
-
-    // save to local 
+    // console.log(this); //save button
     var time = $(this).siblings(".hour").text();
     var value = $(this).siblings(".description").val();
 
     localStorage.setItem(time, value);
 });
 
-// refresh the page and saved items will stay through local storage
-function SavePlanner() {
+//after refresh, data is saved in local storage
+function savePlanner() {
 
-    $(".hour").each(function () {
-        var divTimId = $(this).text();
-        var todayPlanner = localStorage.getItem(divTimId);
+    $(".hour").each(function() {
+        var currentHour = $(this).text();
+        var todayPlanner = localStorage.getItem(currentHour);
 
+        // console.log(this);
+        // console.log(currentHour);
 
-        if (todayPlanner !== null) {
-            $(this).siblings(".plan").val(todayPlanner);
+        if(todayPlanner !== null) {
+            $(this).siblings(".description").val(todayPlanner);
         }
     });
 }
 
-// call function
+// call function 
 timeBlockColor();
-SavePlanner();
+savePlanner();
