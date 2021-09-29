@@ -1,45 +1,51 @@
-   $(document).ready(function () {
+// defined variables
+var saveBtn = $(".saveBtn");
 
-       // Displays the current date in the header
-       var today = moment();
-       $("#currentDay").text(today.format("LLLL"));
-       $(".saveBtn").on("click", function () {
-           var value = $(this).siblings(".description").val();
-           var time = $(this).parent().attr("id");
-           localStorage.setItem(time, value);
-       })
+// current day is displayed at the top of the calendar
+$("#currentDay").text(moment().format('dddd MMMM Do YYYY'));
 
-       $("#hour_9.description").val(localStorage.getItem("hour_9"));
-       $("#hour_10.description").val(localStorage.getItem("hour_10"));
-       $("#hour_11.description").val(localStorage.getItem("hour_11"));
-       $("#hour_12.description").val(localStorage.getItem("hour_12"));
-       $("#hour_13.description").val(localStorage.getItem("hour_13"));
-       $("#hour_14.description").val(localStorage.getItem("hour_14"));
-       $("#hour_15 description").val(localStorage.getItem("hour_15"));
-       $("#hour_16 description").val(localStorage.getItem("hour_16"));
-       $("#hour_17.description").val(localStorage.getItem("hour_17"));
-       $("#hour_18.description").val(localStorage.getItem("hour_18"));
+// each time block is color-coded to indicate whether it is in the past, present, or future
+function timeBlockColor() {
+    var currentHour = moment().hours();
+
+    $(".time-block").each(function () {
+        var divTimId = parseInt($(this).attr("id"));
 
 
-       function cssUpdate() {
-           var currentHour = today.hours();
-           $(".time-block").each(function () {
-               var divTimeId = parseInt($(this).attr("id"));
-               console.log(divTimeId);
-               if (divTimeId < currentHour) {
-                   $(this).addClass("past");
-               } else if (divTimeId === currentHour) {
-                   $(this).removeClass("past");
-                   $(this).removeClass("future");
-                   $(this).addClass("present");
-               } else {
-                   $(this).removeClass("past");
-                   $(this).removeClass("present");
-                   $(this).addClass("future");
-               }
-           })
-       }
+        if (divTimId > currentHour) {
+            $(this).addClass("future");
+        } else if (divTimId === currentHour) {
+            $(this).addClass("present");
+        } else {
+            $(this).addClass("past");
+        }
+    })
+};
 
-       cssUpdate();
 
-   })
+saveBtn.on("click", function () {
+
+    // save to local 
+    var time = $(this).siblings(".hour").text();
+    var value = $(this).siblings(".description").val();
+
+    localStorage.setItem(time, value);
+});
+
+// refresh the page and saved items will stay through local storage
+function SavePlanner() {
+
+    $(".hour").each(function () {
+        var divTimId = $(this).text();
+        var todayPlanner = localStorage.getItem(divTimId);
+
+
+        if (todayPlanner !== null) {
+            $(this).siblings(".plan").val(todayPlanner);
+        }
+    });
+}
+
+// call function
+timeBlockColor();
+SavePlanner();
