@@ -14,11 +14,12 @@
 * HTML
 * CSS
 * JavaScript
+* jQuery
 * Bootstrap
 
 
 ## Demo
-![Code Quiz Demo](Assets\dayPlanner.gif)
+![Code Quiz Demo](assets\dayPlanner.gif)
 
 
 ## Websites
